@@ -17,6 +17,9 @@ import com.yuan.reading.R;
 import com.yuan.reading.bean.LoginBean;
 import com.yuan.reading.interfaceclass.ServiceApi;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,7 +37,6 @@ public class LoginFragment extends Fragment {
     private ServiceApi service;
     private LoginBean loginBean;
     private Call<LoginBean> callback;
-    public static String base_url="http://www.wanandroid.com/";
 
     @Nullable
     @Override
@@ -51,25 +53,49 @@ public class LoginFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         service=retrofit.create(ServiceApi.class);
-        callback = service.login(et.getText().toString(), et2.getText().toString());
+
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                    callback.enqueue(new Callback<LoginBean>() {
-                        @Override
-                        public void onResponse(retrofit2.Call<LoginBean> call, Response<LoginBean> response) {
-                            Log.i("isSuccess", "true");
-                                Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
-                                startActivity(intent);
+                if (et.getText().toString().length() != 0 && et2.getText().toString().length() != 0) {
+                    if (isEmail(et.getText().toString()) == true) {
+                        callback = service.login(et.getText().toString(), et2.getText().toString());
+                        callback.enqueue(new Callback<LoginBean>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<LoginBean> call, Response<LoginBean> response) {
+//                                System.out.println(call.request().body());
+//                                System.out.println(response.body());
+                                if (response.body().toString().equals(callback.toString())) {
+                                    Toast.makeText(getActivity().getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                                    startActivity(intent);
+                                }else{
+                                    Toast.makeText(getActivity().getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
+                                }
                             }
 
-                        @Override
-                        public void onFailure(Call<LoginBean> call, Throwable t) {
-                            Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<LoginBean> call, Throwable t) {
+                                Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }else {
+                        Toast.makeText(getActivity().getApplicationContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                else{
+                    Toast.makeText(getActivity().getApplicationContext(), "请输入内容", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         return mView;
+    }
+
+    public static boolean isEmail(String strEmail) {
+        String strPattern = "^\\s*\\w+(?:\\.{0,1}[\\w-]+)*@[a-zA-Z0-9]+(?:[-.][a-zA-Z0-9]+)*\\.[a-zA-Z]+\\s*$";
+
+        Pattern p = Pattern.compile(strPattern);
+        Matcher m = p.matcher(strEmail);
+        return m.matches();
     }
 }
