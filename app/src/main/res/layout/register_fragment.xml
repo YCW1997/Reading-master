@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:textStyle="italic"
+        android:id="@+id/textView3"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:gravity="center"
+        android:text="注册"
+        android:textColor="#ff0000"
+        android:textSize="30dp" />
+
+    <EditText
+        android:id="@+id/editText3"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editText4"
+        android:layout_below="@+id/textView3"
+        android:layout_marginTop="19dp"
+        android:ems="10"
+        android:hint="邮箱地址"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/editText4"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/editText3"
+        android:layout_marginEnd="56dp"
+        android:layout_marginTop="28dp"
+        android:ems="10"
+        android:hint="密码"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/registerbtn"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageView4"
+        android:layout_below="@+id/editText5"
+        android:layout_marginTop="26dp"
+        android:text="注册" />
+
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editText3"
+        android:layout_toStartOf="@+id/editText3"
+        app:srcCompat="@drawable/icon_email" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editText5"
+        android:layout_toStartOf="@+id/editText5"
+        app:srcCompat="@drawable/icon_pwd" />
+
+    <EditText
+        android:id="@+id/editText5"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/editText4"
+        android:layout_below="@+id/editText4"
+        android:layout_marginTop="23dp"
+        android:ems="10"
+        android:hint="重复密码"
+        android:inputType="textPersonName" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/editText4"
+        android:layout_toStartOf="@+id/editText4"
+        app:srcCompat="@drawable/icon_pwd" />
+
+</RelativeLayout>

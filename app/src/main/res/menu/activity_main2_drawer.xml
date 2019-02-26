@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/mycollection"
+            android:icon="@drawable/drawer_collect"
+            android:title="我的收藏"/>
+        <item
+            android:id="@+id/todo"
+            android:icon="@drawable/drawer_todo"
+            android:title="TODO"/>
+    </group>
+    <group>
+        <item
+            android:id="@+id/note"
+            android:icon="@drawable/drawer_note"
+            android:title="单词本"/>
+        <item
+            android:id="@+id/pwd"
+            android:icon="@drawable/drawer_pwd"
+            android:title="帐号本子"/>
+        <item
+            android:id="@+id/theme"
+            android:icon="@drawable/drawer_theme"
+            android:title="个性换肤"/>
+    </group>
+    <group>
+        <item
+            android:id="@+id/setting"
+            android:icon="@drawable/drawer_setting"
+            android:title="设置"/>
+        <item
+            android:id="@+id/exit"
+            android:icon="@drawable/drawer_exit"
+            android:title="退出"/>
+    </group>
+
+</menu>
