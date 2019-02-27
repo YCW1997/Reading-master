@@ -20,10 +20,10 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.yuan.reading.adapter.ViewPagerFragmentAdapter;
-import com.yuan.reading.fragment.FoodFragment;
-import com.yuan.reading.fragment.HomeFragment;
-import com.yuan.reading.fragment.MyFragment;
-import com.yuan.reading.fragment.PublicFragment;
+import com.yuan.reading.fragment.food.FoodFragment;
+import com.yuan.reading.fragment.home.HomeFragment;
+import com.yuan.reading.fragment.mine.MyFragment;
+import com.yuan.reading.fragment.accounts.PublicFragment;
 
 import java.util.ArrayList;
 import java.util.List;

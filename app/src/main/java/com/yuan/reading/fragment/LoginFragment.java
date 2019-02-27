@@ -1,10 +1,11 @@
 package com.yuan.reading.fragment;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +15,18 @@ import android.widget.Toast;
 
 import com.yuan.reading.MainActivity;
 import com.yuan.reading.R;
-import com.yuan.reading.bean.LoginBean;
+import com.yuan.reading.bean.BaseResponse;
+import com.yuan.reading.bean.UserBean;
 import com.yuan.reading.interfaceclass.ServiceApi;
+import com.yuan.reading.utils.RetrofitUtil;
 
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Administrator on 2019/2/22 0022.
@@ -32,11 +34,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginFragment extends Fragment {
     View mView;
-    private EditText et,et2;
+    private EditText et, et2;
     private Button loginbtn;
     private ServiceApi service;
-    private LoginBean loginBean;
-    private Call<LoginBean> callback;
+    private Call<BaseResponse<UserBean>> callback;
 
     @Nullable
     @Override
@@ -44,47 +45,50 @@ public class LoginFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.login_fragment, null);
         }
-        loginbtn=mView.findViewById(R.id.loginbtn);
-        et=mView.findViewById(R.id.editText);
-        et2=mView.findViewById(R.id.editText2);
+        loginbtn = mView.findViewById(R.id.loginbtn);
+        et = mView.findViewById(R.id.editText);
+        et2 = mView.findViewById(R.id.editText2);
 
-        Retrofit retrofit=new Retrofit.Builder()
-                .baseUrl("http://www.wanandroid.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        service=retrofit.create(ServiceApi.class);
 
+        service = RetrofitUtil.getRetrofit().create(ServiceApi.class);
         loginbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("username", et.getText().toString());
+                map.put("password", et2.getText().toString());
+
                 if (et.getText().toString().length() != 0 && et2.getText().toString().length() != 0) {
-                    if (isEmail(et.getText().toString()) == true) {
-                        callback = service.login(et.getText().toString(), et2.getText().toString());
-                        callback.enqueue(new Callback<LoginBean>() {
+                    if (isEmail(et.getText().toString())) {
+                        callback = service.login(map);
+                        callback.enqueue(new Callback<BaseResponse<UserBean>>() {
                             @Override
-                            public void onResponse(retrofit2.Call<LoginBean> call, Response<LoginBean> response) {
-//                                System.out.println(call.request().body());
-//                                System.out.println(response.body());
-                                if (response.body().toString().equals(callback.toString())) {
-                                    Toast.makeText(getActivity().getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getActivity().getApplicationContext(), MainActivity.class);
+                            public void onResponse(retrofit2.Call<BaseResponse<UserBean>> call, Response<BaseResponse<UserBean>> response) {
+
+                                if (response.body() != null && null != response.body().data) {
+                                    UserBean userBean = response.body().data;
+                                    //把userBean这个对象保存到SharedPreferences中
+                                    SharedPreferences sharedPreferences=getActivity().getSharedPreferences("loginUser", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editor=sharedPreferences.edit();
+                                    editor.putString(userBean.username,userBean.password);
+                                    editor.commit();
+
+                                    Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(getActivity(), MainActivity.class);
                                     startActivity(intent);
-                                }else{
-                                    Toast.makeText(getActivity().getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<LoginBean> call, Throwable t) {
-                                Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                            public void onFailure(Call<BaseResponse<UserBean>> call, Throwable t) {
+                                Toast.makeText(getActivity(), "请求失败", Toast.LENGTH_SHORT).show();
                             }
                         });
-                    }else {
-                        Toast.makeText(getActivity().getApplicationContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
                     }
-                }
-                else{
-                    Toast.makeText(getActivity().getApplicationContext(), "请输入内容", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getActivity(), "请输入内容", Toast.LENGTH_SHORT).show();
                 }
             }
         });

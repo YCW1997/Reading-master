@@ -1,4 +1,4 @@
-package com.yuan.reading.fragment;
+package com.yuan.reading.fragment.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toolbar;
 
 import com.yuan.reading.R;
 
@@ -23,6 +24,7 @@ public class HomeFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.first_fragment, null);
         }
+
         ((TextView) mView.findViewById(R.id.tv1)).setText("首页");
         return mView;
     }

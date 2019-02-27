@@ -1,11 +1,9 @@
 package com.yuan.reading.fragment;
 
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +11,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.yuan.reading.MainActivity;
 import com.yuan.reading.R;
-import com.yuan.reading.bean.RegisterBean;
+import com.yuan.reading.bean.BaseResponse;
+import com.yuan.reading.bean.UserBean;
 import com.yuan.reading.interfaceclass.ServiceApi;
+import com.yuan.reading.utils.RetrofitUtil;
 
-import java.io.File;
+import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Administrator on 2019/2/22 0022.
@@ -38,8 +35,7 @@ public class RegisterFragment extends Fragment {
     View mView;
     private EditText et3,et4,et5;
     private Button registerbtn;
-    private Call<RegisterBean> callback2;
-    private RegisterBean registerBean;
+    private Call<BaseResponse<UserBean>> callback2;
     private ServiceApi service;
 
     @Nullable
@@ -53,42 +49,46 @@ public class RegisterFragment extends Fragment {
         et4 = mView.findViewById(R.id.editText4);
         et5 = mView.findViewById(R.id.editText5);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://www.wanandroid.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();//增加返回值为实体类的支持
-        service = retrofit.create(ServiceApi.class);
-                registerbtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (et3.getText().toString().length() != 0 && et4.getText().toString().length() != 0 && et5.getText().toString().length() != 0) {
-                            if (isEmail(et3.getText().toString())==true) {
-                                callback2 = service.register(et3.getText().toString(), et4.getText().toString(), et5.getText().toString());
-                                callback2.enqueue(new Callback<RegisterBean>() {
-                                    @Override
-                                    public void onResponse(Call<RegisterBean> call, Response<RegisterBean> response) {
-//                                        System.out.println(call.request().body());
-//                                        System.out.println(response.body());
-                                        if (call.request().body().toString().equals(callback2.toString())) {
-                                            Toast.makeText(getActivity().getApplicationContext(), "注册成功", Toast.LENGTH_SHORT).show();
-                                        }else{
-                                            Toast.makeText(getActivity().getApplicationContext(), "注册失败", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
+        service = RetrofitUtil.getRetrofit().create(ServiceApi.class);
+        registerbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("email", et3.getText().toString());
+                        map.put("password", et4.getText().toString());
 
-                                    @Override
-                                    public void onFailure(Call<RegisterBean> call, Throwable t) {
-                                        Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+                        if (et3.getText().toString().length() != 0 && et4.getText().toString().length() != 0 && et5.getText().toString().length() != 0) {
+                            if (et4.getText().toString().equals(et5.getText().toString())) {
+                                if (isEmail(et3.getText().toString())) {
+                                    callback2 = service.register(map);
+                                    callback2.enqueue(new Callback<BaseResponse<UserBean>>() {
+                                        @Override
+                                        public void onResponse(retrofit2.Call<BaseResponse<UserBean>> call, Response<BaseResponse<UserBean>> response) {
+//                                            if (response.body() != null && null != response.body().data) {
+//                                                UserBean userBean = response.body().data;
+                                                Toast.makeText(getActivity().getApplicationContext(), "注册成功", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(getActivity().getApplicationContext(), "登录成功", Toast.LENGTH_SHORT).show();
+                                                Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                startActivity(intent);
+                                            }
+//                                        }
+
+                                        @Override
+                                        public void onFailure(Call<BaseResponse<UserBean>> call, Throwable t) {
+                                            Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    Toast.makeText(getActivity().getApplicationContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
+                                }
                             }else{
-                                Toast.makeText(getActivity().getApplicationContext(), "请输入正确的邮箱", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity().getApplicationContext(), "请保持密码一致", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                                    Toast.makeText(getActivity().getApplicationContext(), "请输入内容", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "请输入内容", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+        });
         return mView;
     }
 

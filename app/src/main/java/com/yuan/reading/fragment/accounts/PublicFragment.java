@@ -1,4 +1,4 @@
-package com.yuan.reading.fragment;
+package com.yuan.reading.fragment.accounts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
