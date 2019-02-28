@@ -27,18 +27,15 @@ public class LoginActivity extends AppCompatActivity {
 
         setVp();
         vp = (ViewPager) findViewById(R.id.viewPager);
-        mViewPagerFragmentAdapter = new ViewPagerFragmentAdapter(mFragmentManager,list);
+        mViewPagerFragmentAdapter = new ViewPagerFragmentAdapter(mFragmentManager, list);
         vp.setAdapter(mViewPagerFragmentAdapter);
     }
 
     private void setVp() {
-            list = new ArrayList<>();
-            Fragment login = new LoginFragment();
-            Fragment register=new RegisterFragment();
-            Bundle bundle = new Bundle();
-            login.setArguments(bundle);
-            register.setArguments(bundle);
-            list.add(login);
-            list.add(register);
-        }
+        list = new ArrayList<>();
+        Fragment login = new LoginFragment();
+        Fragment register = new RegisterFragment();
+        list.add(login);
+        list.add(register);
+    }
 }

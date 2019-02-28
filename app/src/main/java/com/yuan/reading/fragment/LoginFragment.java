@@ -13,12 +13,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.yuan.reading.MainActivity;
 import com.yuan.reading.R;
 import com.yuan.reading.bean.BaseResponse;
 import com.yuan.reading.bean.UserBean;
 import com.yuan.reading.interfaceclass.ServiceApi;
 import com.yuan.reading.utils.RetrofitUtil;
+import com.yuan.reading.utils.SPUtils;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -67,12 +69,14 @@ public class LoginFragment extends Fragment {
 
                                 if (response.body() != null && null != response.body().data) {
                                     UserBean userBean = response.body().data;
-                                    //把userBean这个对象保存到SharedPreferences中
-                                    SharedPreferences sharedPreferences=getActivity().getSharedPreferences("loginUser", Context.MODE_PRIVATE);
-                                    SharedPreferences.Editor editor=sharedPreferences.edit();
-                                    editor.putString(userBean.username,userBean.password);
-                                    editor.commit();
+//                                    //把userBean这个对象保存到SharedPreferences中
+//                                    SharedPreferences sharedPreferences=getActivity().getSharedPreferences("loginUser", Context.MODE_PRIVATE);
+//                                    SharedPreferences.Editor editor=sharedPreferences.edit();
+//                                    editor.putString("user",new Gson().toJson(userBean,UserBean.class));
+//                                    editor.putString(userBean.username,userBean.password);//不能这样写 保存的是一个对象
+//                                    editor.commit();
 
+                                    SPUtils.put("user",new Gson().toJson(userBean));
                                     Toast.makeText(getActivity(), "登录成功", Toast.LENGTH_SHORT).show();
                                     Intent intent = new Intent(getActivity(), MainActivity.class);
                                     startActivity(intent);

@@ -8,6 +8,6 @@ public class UserBean {
     public String password;
     public String icon;
     public String username;
-    public String type;
+    public int type;
     public List<String> collectIds;
 }
