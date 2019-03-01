@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item android:id="@+id/name"
+    <item android:id="@+id/android"
         android:icon="@mipmap/home_android_normal"
         app:showAsAction="ifRoom"
         android:title="android" />
-    <item android:id="@+id/music"
+    <item android:id="@+id/hot"
         android:icon="@mipmap/home_hot_normal"
         android:title="hot"
         app:showAsAction="ifRoom"/>
-    <item android:id="@+id/search"
+    <item android:id="@+id/cate"
         android:icon="@mipmap/home_cate_normal"
         android:title="cate"
         app:showAsAction="ifRoom"/>
