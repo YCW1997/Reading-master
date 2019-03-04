@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private static final String TAG = "MainActivity.TAG";
     public LinearLayout firstLinearLayout;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity
     ViewPagerFragmentAdapter mViewPagerFragmentAdapter;
     FragmentManager mFragmentManager;
 
-    String[] titleName = new String[] {"首页","干货","公众号","我的"};
+    String[] titleName = new String[]{"首页", "干货", "公众号", "我的"};
     List<Fragment> mFragmentList = new ArrayList<Fragment>();
+    public DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +52,11 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main2);
 
         initFragmetList();
-        mViewPagerFragmentAdapter = new ViewPagerFragmentAdapter(mFragmentManager,mFragmentList);
         initView();
         initViewPager();
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -66,9 +67,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -76,15 +78,15 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
+//    @Override
+//    public void onBackPressed() {//为什么要写这个方法
+////        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+//        if (drawer.isDrawerOpen(GravityCompat.START)) {
+//            drawer.closeDrawer(GravityCompat.START);
+//        } else {
+//            super.onBackPressed();
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,10 +114,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+
         int id = item.getItemId();
 
         if (id == R.id.mycollection) {
-            Intent intent=new Intent(MainActivity.this,LoginActivity.class);
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
         } else if (id == R.id.todo) {
@@ -128,12 +131,13 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.setting) {
 
-        }else if (id == R.id.exit) {
+        } else if (id == R.id.exit) {
 
         }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+//
+//        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);//为什么又一次的finviewbyfid
+//        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -143,10 +147,11 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void initViewPager() {
+        mViewPagerFragmentAdapter = new ViewPagerFragmentAdapter(mFragmentManager, mFragmentList);
         mViewPager.addOnPageChangeListener(new ViewPagetOnPagerChangedLisenter());
         mViewPager.setAdapter(mViewPagerFragmentAdapter);
         mViewPager.setCurrentItem(0);
-        updateBottomLinearLayoutSelect(true,false,false,false);
+        updateBottomLinearLayoutSelect(true, false, false, false);
     }
 
     public void initFragmetList() {
@@ -177,46 +182,52 @@ public class MainActivity extends AppCompatActivity
         switch (v.getId()) {
             case R.id.firstLinearLayout:
                 mViewPager.setCurrentItem(0);
-                updateBottomLinearLayoutSelect(true,false,false,false);
+                updateBottomLinearLayoutSelect(true, false, false, false);
                 break;
             case R.id.secondLinearLayout:
                 mViewPager.setCurrentItem(1);
-                updateBottomLinearLayoutSelect(false,true,false,false);
+                updateBottomLinearLayoutSelect(false, true, false, false);
                 break;
             case R.id.threeLinearLayout:
                 mViewPager.setCurrentItem(2);
-                updateBottomLinearLayoutSelect(false,false,true,false);
+                updateBottomLinearLayoutSelect(false, false, true, false);
                 break;
             case R.id.fourLinearLayout:
                 mViewPager.setCurrentItem(3);
-                updateBottomLinearLayoutSelect(false,false,false,true);
+                updateBottomLinearLayoutSelect(false, false, false, true);
                 break;
             default:
                 break;
         }
     }
 
-    private void updateBottomLinearLayoutSelect(boolean f, boolean s, boolean t,boolean o) {
+    private void updateBottomLinearLayoutSelect(boolean f, boolean s, boolean t, boolean o) {
         firstLinearLayout.setSelected(f);
         secondLinearLayout.setSelected(s);
         threeLinearLayout.setSelected(t);
         fourLinearLayout.setSelected(o);
+
     }
+
     class ViewPagetOnPagerChangedLisenter implements ViewPager.OnPageChangeListener {
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 //            Log.d(TAG,"onPageScrooled");
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            Log.d(TAG, "onPageSelected");
+            boolean[] state = new boolean[titleName.length];
+            state[position] = true;
+            updateBottomLinearLayoutSelect(state[0], state[1], state[2], state[3]);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+            Log.d(TAG, "onPageScrollStateChanged");
+        }
     }
-    @Override
-    public void onPageSelected(int position) {
-        Log.d(TAG,"onPageSelected");
-        boolean[] state = new boolean[titleName.length];
-        state[position] = true;
-        updateBottomLinearLayoutSelect(state[0],state[1],state[2],state[3]);
-    }
-    @Override
-    public void onPageScrollStateChanged(int state) {
-        Log.d(TAG,"onPageScrollStateChanged");
-    }
-}
+
+
 }
