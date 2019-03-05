@@ -3,6 +3,10 @@ package com.yuan.reading.fragment.home.childrenfragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +37,7 @@ import retrofit2.Response;
 
 public class AndroidFragment extends Fragment {
     View mView;
-    private ListView listView;
+    private RecyclerView mRecyclerView;
     private List<BaseResponse<AfBean>> mylist = new ArrayList<BaseResponse<AfBean>>();
     private AndroidFragmentApi service;
     private Call<BaseResponse<AfBean>> callback;
@@ -43,21 +47,27 @@ public class AndroidFragment extends Fragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.android_fragment, null);
+            mView = inflater.inflate(R.layout.android_fragment,container, false);
         }
-        listView = (ListView)mView.findViewById(R.id.af_listview);
-
+        mRecyclerView = mView.findViewById (R.id.recyclerview);
 
         service = RetrofitUtil.getRetrofit().create(AndroidFragmentApi.class);
         callback=service.getAfBean(1);
         callback.enqueue(new Callback<BaseResponse<AfBean>>() {
             @Override
             public void onResponse(Call<BaseResponse<AfBean>> call, Response<BaseResponse<AfBean>> response) {
-                AfBean afBean=response.body().data;
-                System.out.println(Thread.currentThread().getName());
-                System.out.println(mylist.toString());
-                mylist.set(0,response.body());
-                listView.setAdapter(new AndroidFragmentAdapter(getActivity(),mylist));
+                BaseResponse<AfBean> afBean=response.body();
+                List<AfBean> datas=afBean.getDatas();
+                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity (),LinearLayoutManager.VERTICAL,false));
+                mRecyclerView.setItemAnimator (new DefaultItemAnimator());
+                adapter=new AndroidFragmentAdapter(getActivity(),datas);
+                mRecyclerView.setAdapter (adapter);
+//                mRecyclerView.addItemDecoration (new DividerItemDecoration(getActivity (),DividerItemDecoration.VERTICAL));
+
+//                System.out.println(Thread.currentThread().getName());
+//                System.out.println(mylist.toString());
+//                mylist.set(0,response.body());
+//                mRecyclerView.setAdapter (adapter);
                 Toast.makeText(getActivity().getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
             }
 
