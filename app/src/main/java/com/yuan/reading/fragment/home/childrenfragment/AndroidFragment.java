@@ -21,6 +21,7 @@ import com.yuan.reading.bean.UserBean;
 import com.yuan.reading.interfaceclass.AndroidFragmentApi;
 import com.yuan.reading.interfaceclass.ServiceApi;
 import com.yuan.reading.utils.RetrofitUtil;
+import com.yuan.reading.utils.SPUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -38,7 +39,6 @@ import retrofit2.Response;
 public class AndroidFragment extends Fragment {
     View mView;
     private RecyclerView mRecyclerView;
-    private List<BaseResponse<AfBean>> mylist = new ArrayList<BaseResponse<AfBean>>();
     private AndroidFragmentApi service;
     private Call<BaseResponse<AfBean>> callback;
     private AndroidFragmentAdapter adapter;
@@ -52,23 +52,21 @@ public class AndroidFragment extends Fragment {
         mRecyclerView = mView.findViewById (R.id.recyclerview);
 
         service = RetrofitUtil.getRetrofit().create(AndroidFragmentApi.class);
-        callback=service.getAfBean(1);
+            callback=service.getAfBean(0);
         callback.enqueue(new Callback<BaseResponse<AfBean>>() {
             @Override
             public void onResponse(Call<BaseResponse<AfBean>> call, Response<BaseResponse<AfBean>> response) {
-                BaseResponse<AfBean> afBean=response.body();
-                List<AfBean> datas=afBean.getDatas();
-                mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity (),LinearLayoutManager.VERTICAL,false));
-                mRecyclerView.setItemAnimator (new DefaultItemAnimator());
-                adapter=new AndroidFragmentAdapter(getActivity(),datas);
-                mRecyclerView.setAdapter (adapter);
-//                mRecyclerView.addItemDecoration (new DividerItemDecoration(getActivity (),DividerItemDecoration.VERTICAL));
+                if (response.body() != null && null != response.body().data) {
+                    AfBean afBean = response.body().data;
+                    List<AfBean.ArticleDetailBean> datas=afBean.getDatas()
+;
+                    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+                    mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+                    adapter = new AndroidFragmentAdapter(getActivity(), datas);
+                    mRecyclerView.setAdapter(adapter);
+                    mRecyclerView.addItemDecoration (new DividerItemDecoration(getActivity (),DividerItemDecoration.VERTICAL));
 
-//                System.out.println(Thread.currentThread().getName());
-//                System.out.println(mylist.toString());
-//                mylist.set(0,response.body());
-//                mRecyclerView.setAdapter (adapter);
-                Toast.makeText(getActivity().getApplicationContext(), "请求成功", Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
