@@ -1,35 +1,47 @@
 package com.yuan.reading.fragment.home.childrenfragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.yuan.reading.R;
+import com.yuan.reading.SearchActivity;
 import com.yuan.reading.adapter.HotFragmentAdapter;
-import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.AnimationFragment;
+import com.yuan.reading.bean.AfBean;
+import com.yuan.reading.bean.BannerBean;
+import com.yuan.reading.bean.BaseResponse;
+import com.yuan.reading.bean.SearchBean;
 import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.InterviewFragment;
-import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.Studio3Fragment;
+import com.yuan.reading.interfaceclass.HotApi;
+import com.yuan.reading.interfaceclass.SearchApi;
+import com.yuan.reading.utils.RetrofitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Administrator on 2019/3/1 0001.
  */
 
-public class HotFragment extends Fragment implements ViewPager.OnPageChangeListener,View.OnClickListener{
+public class HotFragment extends Fragment{
     View mView;
-    private List<Fragment> list=new ArrayList<Fragment>();
+    private SearchApi service;
+    private Call<BaseResponse<List<SearchBean>>> callback;
+    private TabLayout tabLayout;
     private ViewPager viewPager;
-    private TextView tv,tv2,tv3;
+    private List<String> datas = new ArrayList<>();
+    private List<Fragment> fragments = new ArrayList<>();
+    private HotFragmentAdapter adapter;
 
     @Nullable
     @Override
@@ -37,80 +49,55 @@ public class HotFragment extends Fragment implements ViewPager.OnPageChangeListe
         if (mView == null) {
             mView = inflater.inflate(R.layout.hot_fragment, null);
         }
-        initView();
+
+        tabLayout = mView.findViewById(R.id.tabLayout);
+        viewPager = mView.findViewById(R.id.vp_hot);
+
+        service= RetrofitUtil.getRetrofit().create(SearchApi.class);
+        callback=service.getSearch();
+        callback.enqueue(new Callback<BaseResponse<List<SearchBean>>>() {
+            @Override
+            public void onResponse(Call<BaseResponse<List<SearchBean>>> call, Response<BaseResponse<List<SearchBean>>> response) {
+                if (response.body() != null && null != response.body().data) {
+                    List<SearchBean> searchBeans=response.body().data;
+                    datas.add(searchBeans.get(0).getName());
+                    datas.add(searchBeans.get(1).getName());
+                    datas.add(searchBeans.get(2).getName());
+                    //循环注入标签
+                    for (String tab : datas) {
+                        tabLayout.addTab(tabLayout.newTab().setText(tab));
+                    }
+                    for (int i = 0; i < 3; i++) {
+                        fragments.add(InterviewFragment.newInstance(i));
+                    }
+                    tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            viewPager.setCurrentItem(tab.getPosition());
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+
+                        }
+                    });
+                    adapter = new HotFragmentAdapter(getActivity().getSupportFragmentManager(),datas,fragments);
+                    viewPager.setAdapter(adapter);
+                    tabLayout.setupWithViewPager(viewPager);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BaseResponse<List<SearchBean>>> call, Throwable t) {
+
+            }
+        });
         return mView;
     }
 
-    private void initView(){
-        viewPager=(ViewPager)mView.findViewById(R.id.vp_hot);
-        tv=(TextView)mView.findViewById(R.id.textView);
-        tv2=(TextView)mView.findViewById(R.id.textView2);
-        tv3=(TextView)mView.findViewById(R.id.textView3);
-        tv.setOnClickListener(this);
-        tv2.setOnClickListener(this);
-        tv3.setOnClickListener(this);
-
-        list.add(new InterviewFragment());
-        list.add(new Studio3Fragment());
-        list.add(new AnimationFragment());
-
-        viewPager.setAdapter(new HotFragmentAdapter(getFragmentManager(),list));
-        viewPager.setOnPageChangeListener(this);
-        viewPager.setCurrentItem(0);
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-        initBtnListener();
-        switch (position){
-            case 0:
-                tv.setBackgroundColor(Color.parseColor("#ff0000"));
-                break;
-            case 1:
-                tv2.setBackgroundColor(Color.parseColor("#ff0000"));
-                break;
-            case 2:
-                tv3.setBackgroundColor(Color.parseColor("#ff0000"));
-                break;
-                default:
-                    break;
-        }
-
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.textView:
-                tv.setBackgroundColor(Color.parseColor("#ff0000"));
-                viewPager.setCurrentItem(0);
-                break;
-            case R.id.textView2:
-                tv2.setBackgroundColor(Color.parseColor("#ff0000"));
-                viewPager.setCurrentItem(1);
-                break;
-            case R.id.textView3:
-                tv3.setBackgroundColor(Color.parseColor("#ff0000"));
-                viewPager.setCurrentItem(2);
-                break;
-                default:
-                break;
-        }
-    }
-
-    private void initBtnListener(){
-        tv.setBackgroundColor(Color.parseColor("#ffffff"));
-        tv2.setBackgroundColor(Color.parseColor("#ffffff"));
-        tv3.setBackgroundColor(Color.parseColor("#ffffff"));
-    }
 }

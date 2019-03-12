@@ -3,6 +3,7 @@ package com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -25,6 +27,7 @@ import com.yuan.reading.interfaceclass.AndroidFragmentApi;
 import com.yuan.reading.interfaceclass.BannerApi;
 import com.yuan.reading.utils.RetrofitUtil;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,13 +41,31 @@ import retrofit2.Response;
 
 public class InterviewFragment extends Fragment {
     View mView;
+
+    public static final String ARGS_PAGE = "args_page";
+    private int mPage;
+
     private RecyclerView mRecyclerView;
     private XBanner banner;
     private AndroidFragmentApi service;
     private BannerApi service2;
     private Call<BaseResponse<AfBean>> callback;
-    private Call<BaseResponse<BannerBean>> callback2;
+    private Call<BaseResponse<List<BannerBean>>> callback2;
     private AndroidFragmentAdapter adapter;
+
+    public static InterviewFragment newInstance(int page) {
+        Bundle args = new Bundle();
+        args.putInt(ARGS_PAGE, page);
+        InterviewFragment fragment = new InterviewFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPage = getArguments().getInt(ARGS_PAGE);
+    }
 
     @Nullable
     @Override
@@ -80,15 +101,19 @@ public class InterviewFragment extends Fragment {
         banner = (XBanner) mView.findViewById(R.id.banner);
         service2 = RetrofitUtil.getRetrofit().create(BannerApi.class);
         callback2=service2.getBannerBean();
-        callback2.enqueue(new Callback<BaseResponse<BannerBean>>() {
+        callback2.enqueue(new Callback<BaseResponse<List<BannerBean>>>() {
             @Override
-            public void onResponse(Call<BaseResponse<BannerBean>> call, final Response<BaseResponse<BannerBean>> response) {
+            public void onResponse(Call<BaseResponse<List<BannerBean>>> call, final Response<BaseResponse<List<BannerBean>>> response) {
                 if (response.body() != null && null != response.body().data) {
-                    BannerBean bannerBean=response.body().data;
-                    final List<String> img=new ArrayList<String>();
-                    final List<String> title=new ArrayList<String>();
-                    img.add(bannerBean.getUrl());
-                    title.add(bannerBean.getTitle());
+                    List<BannerBean> bannerBean=response.body().data;
+
+                    final List<String> img = new ArrayList<String>();
+                    final List<String> title = new ArrayList<String>();
+                    for (int i = 0; i <bannerBean.size() ; i++) {
+                        img.add(bannerBean.get(i).getimagePath());
+                        title.add(bannerBean.get(i).getTitle());
+                    }
+
                     banner.setData(img,title);
                     banner.setmAdapter(new XBanner.XBannerAdapter() {
                         @Override
@@ -114,15 +139,15 @@ public class InterviewFragment extends Fragment {
                     banner.setOnItemClickListener(new XBanner.OnItemClickListener() {
                         @Override
                         public void onItemClick(XBanner banner, int position) {
-                            Toast.makeText(getActivity(), "点击了第"+position+"图片", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity().getApplicationContext(), "点击了第"+position+"图片", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<BannerBean>> call, Throwable t) {
-
+            public void onFailure(Call<BaseResponse<List<BannerBean>>> call, Throwable t) {
+                Toast.makeText(getActivity().getApplicationContext(), "失败", Toast.LENGTH_SHORT).show();
             }
         });
 

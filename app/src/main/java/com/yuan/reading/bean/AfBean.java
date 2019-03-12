@@ -71,6 +71,7 @@ public class AfBean {
                         private int zan;
                         private List<TagBean> tags;
         private byte[] url;
+        private String name;
 
         public String getapkLink() {
             return apkLink;
@@ -106,6 +107,10 @@ public class AfBean {
 
         public byte[] getUrl() {
             return url;
+        }
+
+        public String getName() {
+            return name;
         }
 
         public static class TagBean {

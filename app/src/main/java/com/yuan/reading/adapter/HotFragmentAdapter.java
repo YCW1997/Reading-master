@@ -3,44 +3,36 @@ package com.yuan.reading.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.yuan.reading.R;
-import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.AnimationFragment;
-
+import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by Administrator on 2019/3/9 0009.
  */
 
 public class HotFragmentAdapter extends FragmentPagerAdapter {
-    private List<Fragment> list;
+    List<String> list=new ArrayList<>();
+    List<Fragment> fragments = new ArrayList<>();
 
-    public HotFragmentAdapter(FragmentManager fm) {
-        super(fm);
-    }
-
-    public HotFragmentAdapter(FragmentManager fm, List<Fragment> list) {
+    public HotFragmentAdapter(FragmentManager fm, List<String> list, List<Fragment> fragments) {
         super(fm);
         this.list = list;
+        this.fragments = fragments;
     }
 
     @Override
     public Fragment getItem(int position) {
-        return list.get(position);
+        return fragments.get(position);
     }
+
+//    @Override
+//    public CharSequence getPageTitle(int position) {
+//        return list.get(position);
+//    }
 
     @Override
     public int getCount() {
-        return list.size();
+        return fragments != null ? fragments.size() : 0;
     }
 }

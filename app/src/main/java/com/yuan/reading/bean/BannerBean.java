@@ -21,4 +21,8 @@ public class BannerBean {
     public String getTitle() {
         return title;
     }
+
+    public String getimagePath() {
+        return imagePath;
+    }
 }

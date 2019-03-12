@@ -1,5 +1,6 @@
 package com.yuan.reading.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -14,6 +15,7 @@ import android.widget.ImageView;
 
 import com.yuan.reading.MainActivity;
 import com.yuan.reading.R;
+import com.yuan.reading.SearchActivity;
 import com.yuan.reading.adapter.HomeFragmentPagerAdapter;
 import com.yuan.reading.fragment.home.childrenfragment.AndroidFragment;
 import com.yuan.reading.fragment.home.childrenfragment.CateFragment;
@@ -30,6 +32,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     View mView;
     private List<Fragment> mFgList = new ArrayList<>();
     private ImageView iv_title_menu;
+    private ImageView iv_search;
     private ImageView iv_title_one, iv_title_two, iv_title_three;
     private ViewPager viewPager;
     private AppBarLayout appBarLayout;
@@ -42,6 +45,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
 
         iv_title_menu = mView.findViewById(R.id.iv_title_menu);
+        iv_search=mView.findViewById(R.id.iv_search);
         iv_title_one = mView.findViewById(R.id.iv_title_one);
         iv_title_two = mView.findViewById(R.id.iv_title_two);
         iv_title_three = mView.findViewById(R.id.iv_title_three);
@@ -66,7 +70,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         iv_title_one.setOnClickListener(this);
         iv_title_two.setOnClickListener(this);
         iv_title_three.setOnClickListener(this);
-
+        iv_search.setOnClickListener(this);
     }
 
     @Override
@@ -74,6 +78,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.iv_title_menu:
                 ((MainActivity)getActivity()).drawer.openDrawer(Gravity.LEFT);
+                break;
+            case R.id.iv_search:
+                Intent intent=new Intent(getActivity(),SearchActivity.class);
+                startActivity(intent);
                 break;
             case R.id.iv_title_one:
                 setCurrent(0);
