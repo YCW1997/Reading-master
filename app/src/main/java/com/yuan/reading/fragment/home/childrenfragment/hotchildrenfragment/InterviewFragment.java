@@ -3,7 +3,6 @@ package com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +25,6 @@ import com.yuan.reading.interfaceclass.AndroidFragmentApi;
 import com.yuan.reading.interfaceclass.BannerApi;
 import com.yuan.reading.utils.RetrofitUtil;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -76,7 +73,11 @@ public class InterviewFragment extends Fragment {
         mRecyclerView = mView.findViewById (R.id.rv_interview);
 
         service = RetrofitUtil.getRetrofit().create(AndroidFragmentApi.class);
-        callback=service.getAfBean(0);
+//        int page=mPage;
+        Bundle bundle = getArguments();
+        String data = bundle.getString("name");
+        callback=service.search(0,data);
+//        callback=service.getAfBean(1);
         callback.enqueue(new Callback<BaseResponse<AfBean>>() {
             @Override
             public void onResponse(Call<BaseResponse<AfBean>> call, Response<BaseResponse<AfBean>> response) {
@@ -85,7 +86,7 @@ public class InterviewFragment extends Fragment {
                     List<AfBean.ArticleDetailBean> datas=afBean.getDatas();
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                    adapter = new AndroidFragmentAdapter(getActivity(), datas);
+                    adapter = new AndroidFragmentAdapter(getActivity(),datas);
                     mRecyclerView.setAdapter(adapter);
                     mRecyclerView.addItemDecoration (new DividerItemDecoration(getActivity (),DividerItemDecoration.VERTICAL));
 

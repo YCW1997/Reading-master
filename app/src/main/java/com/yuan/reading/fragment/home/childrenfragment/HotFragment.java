@@ -8,17 +8,12 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.yuan.reading.R;
-import com.yuan.reading.SearchActivity;
 import com.yuan.reading.adapter.HotFragmentAdapter;
-import com.yuan.reading.bean.AfBean;
-import com.yuan.reading.bean.BannerBean;
 import com.yuan.reading.bean.BaseResponse;
 import com.yuan.reading.bean.SearchBean;
 import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.InterviewFragment;
-import com.yuan.reading.interfaceclass.HotApi;
 import com.yuan.reading.interfaceclass.SearchApi;
 import com.yuan.reading.utils.RetrofitUtil;
 
@@ -60,6 +55,7 @@ public class HotFragment extends Fragment{
             public void onResponse(Call<BaseResponse<List<SearchBean>>> call, Response<BaseResponse<List<SearchBean>>> response) {
                 if (response.body() != null && null != response.body().data) {
                     List<SearchBean> searchBeans=response.body().data;
+                    datas.clear();
                     datas.add(searchBeans.get(0).getName());
                     datas.add(searchBeans.get(1).getName());
                     datas.add(searchBeans.get(2).getName());
