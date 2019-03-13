@@ -16,12 +16,13 @@ import java.util.List;
 
 public class HotFragmentAdapter extends FragmentPagerAdapter {
     List<String> list=new ArrayList<>();
-    List<Fragment> fragments = new ArrayList<>();
+//    List<Fragment> fragments = new ArrayList<>();
 
-    public HotFragmentAdapter(FragmentManager fm, List<String> list, List<Fragment> fragments) {
+//    public HotFragmentAdapter(FragmentManager fm, List<String> list, List<Fragment> fragments) {
+public HotFragmentAdapter(FragmentManager fm, List<String> list) {
         super(fm);
         this.list = list;
-        this.fragments = fragments;
+//        this.fragments = fragments;
     }
 
     @Override
@@ -40,6 +41,7 @@ public class HotFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return fragments != null ? fragments.size() : 0;
+//        return fragments != null ? fragments.size() : 0;
+        return list != null ? list.size() : 0;
     }
 }

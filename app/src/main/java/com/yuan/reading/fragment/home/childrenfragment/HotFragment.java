@@ -13,7 +13,6 @@ import com.yuan.reading.R;
 import com.yuan.reading.adapter.HotFragmentAdapter;
 import com.yuan.reading.bean.BaseResponse;
 import com.yuan.reading.bean.SearchBean;
-import com.yuan.reading.fragment.home.childrenfragment.hotchildrenfragment.InterviewFragment;
 import com.yuan.reading.interfaceclass.SearchApi;
 import com.yuan.reading.utils.RetrofitUtil;
 
@@ -35,7 +34,7 @@ public class HotFragment extends Fragment{
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private List<String> datas = new ArrayList<>();
-    private List<Fragment> fragments = new ArrayList<>();
+//    private List<Fragment> fragments = new ArrayList<>();
     private HotFragmentAdapter adapter;
 
     @Nullable
@@ -63,9 +62,9 @@ public class HotFragment extends Fragment{
                     for (String tab : datas) {
                         tabLayout.addTab(tabLayout.newTab().setText(tab));
                     }
-                    for (int i = 0; i < 3; i++) {
-                        fragments.add(InterviewFragment.newInstance(i));
-                    }
+//                    for (int i = 0; i < 3; i++) {
+//                        fragments.add(InterviewFragment.newInstance(i));
+//                    }
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
@@ -82,7 +81,8 @@ public class HotFragment extends Fragment{
 
                         }
                     });
-                    adapter = new HotFragmentAdapter(getActivity().getSupportFragmentManager(),datas,fragments);
+                    adapter = new HotFragmentAdapter(getActivity().getSupportFragmentManager(),datas);
+//                    adapter = new HotFragmentAdapter(getActivity().getSupportFragmentManager(),datas,fragments);
                     viewPager.setAdapter(adapter);
                     tabLayout.setupWithViewPager(viewPager);
                 }

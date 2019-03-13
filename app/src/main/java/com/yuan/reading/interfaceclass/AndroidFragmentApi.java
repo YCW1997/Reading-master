@@ -9,6 +9,7 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Administrator on 2019/3/2 0002.
@@ -20,5 +21,8 @@ public interface AndroidFragmentApi {
 
     @FormUrlEncoded
     @POST("article/query/{page}/json")
-    Call<BaseResponse<AfBean>> search(@Path("page") int page,@Field("key") String key);
+    Call<BaseResponse<AfBean>> search(@Path("page") int page,@Field("k") String key);
+
+    @GET("article/list/{page}/json")
+    Call<BaseResponse<AfBean>> getArticleCid(@Path("page") int page, @Query("cid") int cid);
 }
