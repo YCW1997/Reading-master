@@ -15,26 +15,24 @@ import java.util.List;
  */
 
 public class CateFragmentAdapter extends FragmentPagerAdapter {
-    List<String> list=new ArrayList<>();
-    List<Integer> list2=new ArrayList<>();
-    public CateFragmentAdapter(FragmentManager fm, List<String> list,List<Integer> list2) {
+    List<Integer> list=new ArrayList<>();
+    public CateFragmentAdapter(FragmentManager fm, List<Integer> list) {
         super(fm);
         this.list = list;
-        this.list2=list2;
     }
 
     @Override
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         CateChildrenFragment ccf = new CateChildrenFragment();
-        bundle.putInt("cid", list2.get(position));
+        bundle.putInt("cid", list.get(position));
         ccf.setArguments(bundle);
         return ccf;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return list.get(position);
+        return list.get(position)+"";
     }
 
     @Override

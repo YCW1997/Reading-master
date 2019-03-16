@@ -1,5 +1,6 @@
-package com.yuan.reading.fragment.home.childrenfragment.catechildrenfragment;
+package com.yuan.reading.fragment.food;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,21 +11,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.stx.xhb.xbanner.XBanner;
-import com.stx.xhb.xbanner.transformers.Transformer;
 import com.yuan.reading.R;
 import com.yuan.reading.adapter.AndroidFragmentAdapter;
+import com.yuan.reading.adapter.TodayAdapter;
 import com.yuan.reading.bean.AfBean;
-import com.yuan.reading.bean.BannerBean;
 import com.yuan.reading.bean.BaseResponse;
+import com.yuan.reading.bean.TodayBean;
+import com.yuan.reading.bean.TodayResponse;
 import com.yuan.reading.interfaceclass.AndroidFragmentApi;
-import com.yuan.reading.interfaceclass.BannerApi;
 import com.yuan.reading.utils.RetrofitUtil;
+import com.yuan.reading.utils.RetrofitUtil2;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,16 +33,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Administrator on 2019/3/13 0013.
+ * Created by Administrator on 2019/3/15 0015.
  */
 
-public class CateChildrenFragment extends Fragment{
+public class TodayFragment extends Fragment {
     View mView;
-    private int mPage=0;
     private RecyclerView mRecyclerView;
     private AndroidFragmentApi service;
-    private Call<BaseResponse<AfBean>> callback;
-    private AndroidFragmentAdapter adapter;
+    private Call<TodayResponse<TodayBean.ResultsBean>> callback;
+    private TodayAdapter adapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,26 +56,24 @@ public class CateChildrenFragment extends Fragment{
         }
         mRecyclerView = mView.findViewById (R.id.recyclerview);
 
-        service = RetrofitUtil.getRetrofit().create(AndroidFragmentApi.class);
-        Bundle bundle = getArguments();
-        int data = bundle.getInt("cid");
-        callback=service.getArticleCid(mPage,data);
-        callback.enqueue(new Callback<BaseResponse<AfBean>>() {
+        service = RetrofitUtil2.getRetrofit().create(AndroidFragmentApi.class);
+        callback=service.getToday();
+        callback.enqueue(new Callback<TodayResponse<TodayBean.ResultsBean>>() {
             @Override
-            public void onResponse(Call<BaseResponse<AfBean>> call, Response<BaseResponse<AfBean>> response) {
-                if (response.body() != null && null != response.body().data) {
-                    AfBean afBean = response.body().data;
-                    List<AfBean.ArticleDetailBean> datas=afBean.getDatas();
+            public void onResponse(Call<TodayResponse<TodayBean.ResultsBean>> call, Response<TodayResponse<TodayBean.ResultsBean>> response) {
+                if (response.body() != null && null !=response.body().results) {
+                    TodayBean.ResultsBean resultsBean=response.body().results;
+                    List<TodayBean.ResultsBean.AndroidBean> androidBean=resultsBean.getAndroid();
                     mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
                     mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                    adapter = new AndroidFragmentAdapter(getActivity(),datas);
+                    adapter = new TodayAdapter(getActivity(),androidBean);
                     mRecyclerView.setAdapter(adapter);
                     mRecyclerView.addItemDecoration (new DividerItemDecoration(getActivity (),DividerItemDecoration.VERTICAL));
                 }
             }
 
             @Override
-            public void onFailure(Call<BaseResponse<AfBean>> call, Throwable t) {
+            public void onFailure(Call<TodayResponse<TodayBean.ResultsBean>> call, Throwable t) {
                 Toast.makeText(getActivity().getApplicationContext(), "请求失败", Toast.LENGTH_SHORT).show();
             }
         });
