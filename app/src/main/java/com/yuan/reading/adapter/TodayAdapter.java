@@ -33,7 +33,6 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.MyViewHolder
     Context context;
     private List<TodayBean.ResultsBean.AndroidBean> list;
     private LayoutInflater mLayoutInflater;
-    private List<String> mData;
 
     public TodayAdapter(Context context, List<TodayBean.ResultsBean.AndroidBean> list) {
         this.context = context;
@@ -50,10 +49,10 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull TodayAdapter.MyViewHolder holder, final int position) {
-        TodayBean.ResultsBean.AndroidBean item = list.get (position);
+        TodayBean.ResultsBean.AndroidBean item = list.get(position);
         holder.tv.setText(item.getWho());
         holder.tv3.setText(item.getDesc());
-        holder.tv4.setText(item.getType()+"/"+item.getSource());
+        holder.tv4.setText(item.getType() + "/" + item.getSource());
         holder.tv5.setText(item.getPublishedAt());
 
         if (list.get(position).getImages()!=null) {
@@ -62,18 +61,16 @@ public class TodayAdapter extends RecyclerView.Adapter<TodayAdapter.MyViewHolder
                         .load(list.get(position).getImages().get(0)) //加载地址
                         .override(500, 500)
                         .into(holder.img);//显示的位置
-//                holder.img.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        mData.add(list.get(position).getImages().get(position));
-//                        Intent intent = new Intent(TodayAdapter.this.context, ImageActivity.class);
-//                        Bundle bundle = new Bundle();
-//                        bundle.putSerializable("dataBean", (Serializable) mData);
-//                        intent.putExtras(bundle);
-//                        intent.putExtra("currentPosition", position);
-//                        context.startActivity(intent);
-//                    }
-//                });
+                holder.img.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(TodayAdapter.this.context, ImageActivity.class);
+                        Bundle bundle = new Bundle();
+                        bundle.putStringArrayList("list", (ArrayList<String>) list.get(position).getImages());
+                        intent.putExtras(bundle);
+                        context.startActivity(intent);
+                    }
+                });
             }
             if (list.get(position).getImages().size()==2){
                 Glide.with(context)

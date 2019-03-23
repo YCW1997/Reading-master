@@ -26,8 +26,9 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".SearchActivity"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".SearchActivity"/>
+        <activity android:name=".fragment.food.ImageActivity"/>
     </application>
 
 </manifest>

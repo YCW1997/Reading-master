@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.yuan.reading.bean.CateBean;
 import com.yuan.reading.fragment.home.childrenfragment.catechildrenfragment.CateChildrenFragment;
 
 import java.util.ArrayList;
@@ -15,8 +16,8 @@ import java.util.List;
  */
 
 public class CateFragmentAdapter extends FragmentPagerAdapter {
-    List<Integer> list=new ArrayList<>();
-    public CateFragmentAdapter(FragmentManager fm, List<Integer> list) {
+    List<CateBean> list;
+    public CateFragmentAdapter(FragmentManager fm, List<CateBean> list) {
         super(fm);
         this.list = list;
     }
@@ -25,14 +26,14 @@ public class CateFragmentAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         Bundle bundle = new Bundle();
         CateChildrenFragment ccf = new CateChildrenFragment();
-        bundle.putInt("cid", list.get(position));
+        bundle.putSerializable("cid",list.get(position));
         ccf.setArguments(bundle);
         return ccf;
     }
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return list.get(position)+"";
+        return list.get(position).getName();
     }
 
     @Override

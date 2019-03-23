@@ -38,7 +38,6 @@ public class CateFragment extends Fragment {
     private Call<BaseResponse<List<CateBean>>> callback;
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private List<Integer> datas = new ArrayList<>();
     private CateFragmentAdapter adapter;
 
     @Nullable
@@ -57,13 +56,9 @@ public class CateFragment extends Fragment {
             public void onResponse(Call<BaseResponse<List<CateBean>>> call, Response<BaseResponse<List<CateBean>>> response) {
                 if (response.body() != null && null != response.body().data) {
                     List<CateBean> searchBeans=response.body().data;
-                    datas.clear();
-                    for (int i = 0; i < searchBeans.size(); i++) {
-                        datas.add(searchBeans.get(i).getId());
-                    }
                     //循环注入标签
-                    for (Integer tab : datas) {
-                        tabLayout.addTab(tabLayout.newTab().setText(tab+""));
+                    for (CateBean tab : searchBeans) {
+                        tabLayout.addTab(tabLayout.newTab().setText(tab.getName()));
                     }
                     tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
@@ -81,7 +76,7 @@ public class CateFragment extends Fragment {
 
                         }
                     });
-                    adapter = new CateFragmentAdapter(getActivity().getSupportFragmentManager(),datas);
+                    adapter = new CateFragmentAdapter(getActivity().getSupportFragmentManager(),searchBeans);
                     viewPager.setAdapter(adapter);
                     tabLayout.setupWithViewPager(viewPager);
                 }

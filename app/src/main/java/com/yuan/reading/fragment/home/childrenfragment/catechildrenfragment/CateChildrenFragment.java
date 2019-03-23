@@ -21,6 +21,7 @@ import com.yuan.reading.adapter.AndroidFragmentAdapter;
 import com.yuan.reading.bean.AfBean;
 import com.yuan.reading.bean.BannerBean;
 import com.yuan.reading.bean.BaseResponse;
+import com.yuan.reading.bean.CateBean;
 import com.yuan.reading.interfaceclass.AndroidFragmentApi;
 import com.yuan.reading.interfaceclass.BannerApi;
 import com.yuan.reading.utils.RetrofitUtil;
@@ -59,8 +60,8 @@ public class CateChildrenFragment extends Fragment{
 
         service = RetrofitUtil.getRetrofit().create(AndroidFragmentApi.class);
         Bundle bundle = getArguments();
-        int data = bundle.getInt("cid");
-        callback=service.getArticleCid(mPage,data);
+        CateBean data = (CateBean) bundle.getSerializable("cid");
+        callback=service.getArticleCid(mPage,data.getId());
         callback.enqueue(new Callback<BaseResponse<AfBean>>() {
             @Override
             public void onResponse(Call<BaseResponse<AfBean>> call, Response<BaseResponse<AfBean>> response) {

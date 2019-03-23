@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.yuan.reading.bean.TodayBean;
 import com.yuan.reading.fragment.food.ImageActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class MyImageAdapter extends PagerAdapter {
     public static final String TAG = MyImageAdapter.class.getSimpleName();
     private List<String> imageUrls;
     private AppCompatActivity activity;
-    private List<TodayBean.ResultsBean.AndroidBean> list;
+    private ArrayList<TodayBean.ResultsBean.AndroidBean> list;
 
     public MyImageAdapter(List<String> imageUrls, AppCompatActivity activity) {
         this.imageUrls = imageUrls;
@@ -34,9 +35,11 @@ public class MyImageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         String url = imageUrls.get(position);
         ImageView photoView = new ImageView(activity);
-        Glide.with(activity)
-                .load(list.get(position).getImages()) //加载地址
-                .into(photoView);//显示的位置
+        if (!url.isEmpty()) {
+                Glide.with(activity)
+                        .load(imageUrls.get(position)) //加载地址
+                        .into(photoView);//显示的位置
+        }
         container.addView(photoView);
         photoView.setOnClickListener(new View.OnClickListener() {
             @Override

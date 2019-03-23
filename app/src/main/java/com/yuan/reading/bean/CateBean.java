@@ -1,12 +1,13 @@
 package com.yuan.reading.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Administrator on 2019/3/10 0010.
  */
 
-public class CateBean {
+public class CateBean implements Serializable{
 
         /**
          * children : []
